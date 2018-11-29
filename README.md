@@ -15,7 +15,7 @@ go build example.go
 
 ### *kubeconfig* File
 
-One of the first thing any program using a [Kubernetes client library](https://kubernetes.io/docs/reference/using-api/client-libraries/) does is reading a [*kubeconfig*](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/) file (the same type of file read by `kubectl`).
+One of the first thing every program using a [Kubernetes client library](https://kubernetes.io/docs/reference/using-api/client-libraries/) does is reading a [*kubeconfig*](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/) file (the same type of file read by `kubectl`).
 
 All example programs in this repository read the default *kubeconfig* file `~/.kube/config`. So, before running the programs, make sure that this file exists ad that the context is set to the Kubernetes cluster that you want to work on.
 
@@ -24,6 +24,10 @@ You can check the active context in the *kubeconfig* file like this:
 ~~~bash
 kubectl config current-context
 ~~~
+
+### Go Client Library
+
+To be able to build the example programs, you first need to install the Go client library according to the instructions [here](https://github.com/kubernetes/client-go/blob/master/INSTALL.md#installing-client-go).
 
 ## Examples
 
