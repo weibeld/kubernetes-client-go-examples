@@ -35,10 +35,36 @@ To be able to build the example programs, you first need to install the Go clien
 
 This example shows how to list different types of resources across all namespaces. The listed resources include:
 
-- Nodes
-- Pods
-- Deployments
+- [Nodes](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.12/#node-v1-core)
+- [Pods](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.12/#pod-v1-core)
+- [Deployments](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.12/#deployment-v1-apps)
 
 ### ex2-deployment
 
-This example shows how to create a new deployment in the default namespace, list all deployments in the default namespace, and finally delete the created deployment.
+This example shows how to create a new [deployment](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.12/#deployment-v1-apps) in the default namespace, list all deployments in the default namespace, and finally delete the created deployment.
+
+The carried out steps are:
+
+1. Create deployment
+2. List deployments
+3. Delete deployment
+
+The execution of the program stops after each steps until you press *Enter*. This allows you to inspect the resources in the cluster with `kubectl` after each step.
+
+### ex3-deployment-and-service
+
+This example shows how to create a [deployment](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.12/#deployment-v1-apps) and a [service](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.12/#service-v1-core) that exposes this deployment. All resources are created in the default namespace.
+
+The service is of type *load balancer* and listens on port 80. The deployment manages multiple replicas of [NGINX](https://hub.docker.com/_/nginx/) containers.
+
+The steps carried out are:
+
+1. Create deployment
+2. Create service
+3. Delete service
+4. Delete deployment
+
+The execution of the program stops after each steps until you press *Enter*. This allows you to inspect the resources in the cluster with `kubectl` after each step.
+
+Note that after step 2, it might take some minutes until the service is accessible through the load balander IP address or DNS name (this depends on the cloud provider). Once the load balancer has been initialised, you should see the NGINX welcome page when you access the service.
+
