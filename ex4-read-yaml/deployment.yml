@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: ex4-read-yaml
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ex4-read-yaml
+  template:
+    metadata:
+      labels:
+        app: ex4-read-yaml
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.12
+          ports:
+            - containerPort: 80

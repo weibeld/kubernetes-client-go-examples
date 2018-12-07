@@ -9,8 +9,7 @@ The example programs are adapted from the [examples](https://github.com/kubernet
 Compile and run the example programs as follows:
 
 ~~~bash
-go build example.go
-./example
+go run example.go
 ~~~
 
 ### *kubeconfig* File
@@ -27,7 +26,12 @@ kubectl config current-context
 
 ### Go Client Library
 
-To be able to build the example programs, you first need to install the Go client library according to the instructions [here](https://github.com/kubernetes/client-go/blob/master/INSTALL.md#installing-client-go).
+To be able to build the example programs, you first need to install the Go client library according to the instructions [here](https://github.com/kubernetes/client-go/blob/master/INSTALL.md#installing-client-go):
+
+~~~bash
+go get k8s.io/client-go/...
+go get -u k8s.io/apimachinery/...
+~~~
 
 ## Examples
 
@@ -66,5 +70,15 @@ The steps carried out are:
 
 The execution of the program stops after each steps until you press *Enter*. This allows you to inspect the resources in the cluster with `kubectl` after each step.
 
-Note that after step 2, it might take some minutes until the service is accessible through the load balander IP address or DNS name (this depends on the cloud provider). Once the load balancer has been initialised, you should see the NGINX welcome page when you access the service.
+Note that after step 2, it might take some minutes until the service is accessible through the load balancer's IP address or DNS name (this depends on the cloud provider). Once the load balancer is initialised, you should see the NGINX welcome page when you access the service.
+
+### ex4-read-yaml
+
+This example shows how to read a Kubernetes API object (in this case a deployment) from a YAML file, and then deploy it to the cluster.
+
+The client-go library provides no straightforward way to read API objects from YAML files (see [here](https://github.com/kubernetes/client-go/issues/193)). We can work around this by using the [`github.com/ghodss/yaml`](https://github.com/ghodss/yaml) package to parse a YAML file and convert it to a client-go Kubernetes API object struct.
+
+The `github.com/ghodss/yaml` package is suitable, because it converts the YAML to JSON before reading it into a struct. This is good because the client-go API object structs contain [tags](https://medium.com/golangspec/tags-in-golang-3e5db0b8ef3e) for the JSON format, that is, the structs themselves define their serialisation/deserialisation to and from JSON. In this way, the overall conversion from YAML to a client-go API object struct works correctly, even if the structs have no YAML tags.
+
+Note that if we defined the API objects in JSON instead of YAML, we could convert them to client-go API object structs with the standard [encoding/json](https://godoc.org/encoding/json) package (see [here](https://gist.github.com/mofelee/36b996d5c161dc60d551b52f3848a464)).
 
