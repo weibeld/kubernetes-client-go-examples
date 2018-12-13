@@ -35,7 +35,7 @@ go get -u k8s.io/apimachinery/...
 
 ## Examples
 
-### ex1-list
+### ex1-list-resources
 
 This example shows how to list different types of resources across all namespaces. The listed resources include:
 
@@ -55,7 +55,7 @@ The carried out steps are:
 
 The execution of the program stops after each steps until you press *Enter*. This allows you to inspect the resources in the cluster with `kubectl` after each step.
 
-### ex3-deployment-and-service
+### ex3-deployment-service
 
 This example shows how to create a [deployment](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.12/#deployment-v1-apps) and a [service](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.12/#service-v1-core) that exposes this deployment. All resources are created in the default namespace.
 
