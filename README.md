@@ -82,3 +82,42 @@ The `github.com/ghodss/yaml` package is suitable, because it converts the YAML t
 
 Note that if we defined the API objects in JSON instead of YAML, we could convert them to client-go API object structs with the standard [encoding/json](https://godoc.org/encoding/json) package (see [here](https://gist.github.com/mofelee/36b996d5c161dc60d551b52f3848a464)).
 
+### ex5-secrets
+
+This example shows how to create and update [secrets](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.13/#secret-v1-core). [Kubernetes secrets](https://kubernetes.io/docs/concepts/configuration/secret/) are similar to [config maps](https://kubernetes.io/docs/concepts/configuration/secret/) except that secrets are intended to contain sensitive data (and are stored in encrypted form in the Kubernetes control plane). The purpose of secrets is to securely [distribute sensitive data to pods](https://kubernetes.io/docs/tasks/inject-data-application/distribute-credentials-secure/).
+
+A single secret objects contains a `data` field that contains any number of key/value pairs. The keys are strings and the values are [Base64](https://tools.ietf.org/html/rfc4648#section-4) encodings of arbitrary bytes. The decoded values may be strings or non-strings (e.g. binary data).
+
+There is a small complication: the secret object also provides a `stringData` field which allows to specify values as unencoded strings rather than Base64-encoded bytes. The values are then automatically Base64-encoded and the key/value pairs are saved in the `data` field of the object (overwriting any existing values with identical keys). The `stringData` field exists for convenience (to more easily specify secret data with string values) and it is **write-only**. That means, when describing a secret, only the `data` field contains any data, no matter whether the data has been specified through the `data` or `stringData` field.
+
+When reading a secret specification from a YAML file, client-go (as well as `kubectl`) expect values under `data` to be Base64-encodings and values under `stringData` to be plain strings. However, when defining new secret data programmatically, client-go does the Base64 encoding automatically, and it simply requires values for `data` to be byte arrays and values for `stringData` to be strings. Similarly, when reading a secret, client-go returns the values of the `data` field as non-Base64-encoded byte arrays (regarding the `stringData` field, remember that it is never read). However, when you read a secret with `kubectl`, the `data` values are always output as Base64 encodings. 
+
+All of this is summarised in the  following.
+
+Secret specified in YAML file:
+
+~~~
+           | client-go | kubectl |
+-----------+-----------+---------+
+data       | Base64    | Base64  |
+stringData | string    | string  |
+~~~
+
+Adding and reading secret values in client-go, and reading secret values with `kubectl`:
+
+~~~
+           |                client-go                |             |
+           | add                | read               | kubectl get |
+-----------+--------------------+--------------------+-------------|
+data       | []byte (unencoded) | []byte (unencoded) | Base64      |
+stringData | string             | -                  | -           |
+~~~
+
+To read the data of a secret with `kubectl`, use the following command:
+
+~~~bash
+kubectl get -o yaml secret/my-secret
+~~~
+
+The example reads an initial secret specification from a YAML file and then adds new key/value pairs to it, both through the `data` and the `stringData` fields. After each step the execution pauses until you press Enter. It is helpful to inspect the secret after each step with the above command.
+
